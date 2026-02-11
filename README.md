@@ -1,6 +1,6 @@
 # 🚀 Optimización - Repositorio de Clase
 
-Bienvenido al repositorio oficial de la asignatura de **Optimización**. Aquí se recopilarán todos los códigos, algoritmos y ejercicios prácticos desarrollados durante las sesiones.
+Bienvenido al repositorio oficial de la asignatura de **Optimización**. Aquí se recopilarán todos los códigos, algoritmos y ejercicios prácticos desarrollados.
 
 ## 📋 Gestión y Asignaciones
 
