@@ -8,11 +8,12 @@ class funcion:
 
     # Methods 
     def __init__(self, fun):
-        pass
+        func = fun 
 
-    def eval(): 
-        pass 
-
+    def eval(args): 
+        result = self.func(args)
+        return result 
+    
     def diff(): 
         pass 
 
