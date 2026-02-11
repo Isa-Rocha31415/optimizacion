@@ -14,10 +14,10 @@ Para mantener el orden en las entregas y el desarrollo:
 
 Para mantener la uniformidad y legibilidad del proyecto, todos los colaboradores deben seguir estas reglas de nomenclatura:
 
-* **Variables:** Se utilizará la notación **camelCase**.
-    * *Ejemplo:* `valorMinimo`, `iteracionActual`, `matrizResultante`.
-* **Funciones:** Se utilizará la notación **snake_case**.
-    * *Ejemplo:* `calcular_costo()`, `metodo_simplex()`, `derivada_funcion()`.
+* **Variables:** Se utilizará la notación **snake_case**.
+    * *Ejemplo:* `valor_minimo`, `iteracion_actual`, `matriz_rersultante`.
+* **Funciones:** Se utilizará la notación **camelCase**.
+    * *Ejemplo:* `calcularCosto()`, `metodoSimplex()`, `derivadaFuncion()`.
 
 ---
 
