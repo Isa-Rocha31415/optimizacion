@@ -1,4 +1,4 @@
-class DG:
+class dg:
     def __init__(self, funcion, c=1):
         """
         ISA: Guardas la función que vas a optimizar y el paso (learning rate).
