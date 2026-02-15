@@ -1,7 +1,7 @@
 from funcion import funcion
 
 class sphere(funcion):
-    #  JULY f(x) = sum(xi^2)
+    #  TADEO f(x) = sum(xi^2)
 
     def eval(self, x):
         #calcular el valor de la función en un punto x. Ejemplo: return x[0]**2 + x[1]**2
