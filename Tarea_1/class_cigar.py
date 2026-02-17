@@ -1,9 +1,4 @@
 from funcion import funcion
-
-class cigar(funcion):
-    #  JULY f(x) = sum(xi^2)
-
-    from funcion import funcion
 import numpy as np
 class cigar(funcion):
     #  JULY f(x) = sum(xi^2)
@@ -20,7 +15,5 @@ class cigar(funcion):
         h = np.eye(len(x)) * 2 * (10**6)
         h[0, 0] = 2
         return h
-    
-    pass
     
     pass
