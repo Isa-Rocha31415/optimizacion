@@ -34,8 +34,8 @@ class rosenbrock(funcion):
         y = args[1]  
 
         # Derivadas parciales 
-        dx_result = -2(1 - x) - 400*x(y - x**2)
-        dy_result = 200(y - x**2) 
+        dx_result = -2*(1 - x) - 400*x*(y - x**2)
+        dy_result = 200*(y - x**2) 
         
         gradient =  np.array([dx_result, dy_result])  
         return gradient

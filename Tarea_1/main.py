@@ -12,15 +12,15 @@ if __name__ == "__main__":
     fig, plot = plt.subplots(figsize=(10,8))
 
     #func = sphere
-    #func = cigar
-    func = rosenbrock
+    #func = cigar()
+    func = rosenbrock()
 
     desenso_gradiente =dg(func,paso=0.0004)
     punto_inicial = [0,0]
     desenso_gradiente.solve(x_o =punto_inicial)
 
-    func.plot(lim=[-5,5], canvas =ax)
-    desenso_gradiente.plot2d(canvas=ax)
+    func.plot(lim=[-2,2,-2,2],canvas=plot)
+    desenso_gradiente.plot2d(canvas=plot)
 
     plt.title(f"Optimizacion de {type(func).__name__}")
     plt.show()
