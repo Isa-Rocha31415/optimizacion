@@ -3,6 +3,11 @@ import numpy as np
 class cigar(funcion):
     #  JULY f(x) = sum(xi^2)
 
+    from funcion import funcion
+import numpy as np
+class cigar(funcion):
+    #  JULY f(x) = sum(xi^2)
+
     def eval(self, x):
         return x[0]**2 + 10**6 * np.sum(x[1:]**2)
     
