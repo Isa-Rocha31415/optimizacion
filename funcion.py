@@ -10,7 +10,7 @@ class funcion:
     def __init__(self, fun):
         func = fun 
 
-    def eval(args): 
+    def eval(self, args): 
         result = self.func(args)
         return result 
     
