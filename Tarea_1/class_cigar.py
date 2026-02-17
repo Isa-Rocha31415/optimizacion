@@ -1,19 +1,20 @@
 from funcion import funcion
-import numpy as np
+
 class cigar(funcion):
     #  JULY f(x) = sum(xi^2)
 
     def eval(self, x):
-        return x[0]**2 + 10**6 * np.sum(x[1:]**2)
-    
+        #calcular el valor de la función en un punto x. Ejemplo: return x[0]**2 + x[1]**2
+        pass
+
     def diff(self, x):
-        grad = 2 * x * (10**6)
-        grad[0] = 2 * x[0]
-        return grad
-    
+        #Aquí debes calcular el gradiente (derivadas parciales).
+        #Debes retornar un array de NumPy con las derivadas respecto a cada variable.
+        pass
+
     def doiff(self, x):
-        h = np.eye(len(x)) * 2 * (10**6)
-        h[0, 0] = 2
-        return h
+        #Aquí debes calcular la segunda derivada (Hessiana).
+        #Retorna una matriz con las segundas derivadas.
+        pass
     
     pass
