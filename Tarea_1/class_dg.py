@@ -43,6 +43,7 @@ class dg:
                 break
             #actualizamos
             x = x_nuevo
+            print(f"Paso {i}: {x}")
             
         return x
 
