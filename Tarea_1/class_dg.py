@@ -3,49 +3,60 @@ import numpy as np
 import math
 
 class dg:
-    def __init__(self, funcion, paso):
-        """
-         Guardas la función que vas a optimizar y el paso (learning rate).
-        Crea una lista vacía 'self.history' para guardar la trayectoria.
-        """
-        self.f = funcion
-        self.paso = paso
-        self.trayectoria =[]
+    def __init__(self, funcion_obj, alpha=0.01, k_max=1000):
         
-
-    def solve(self, x_o, iteraciones=2000,tolerancia=0.0001):
+        self.funcion_obj = funcion_obj
+        self.alpha = alpha
+        self.k_max = k_max
+        self.trayectoria = None
+        
+    def solve(self, x0):
         """
         Funcion desenso de gradiente
+        1) k =0 , k_max
+        2) X_a = X_0
+        3) a_c  f(x_a)
+        4) a_c = c
+        5) DO
+        6) P_x = -(Nabla)f(x_a)
+        7) x_a1 = x_a + a_a Px
+        8) f_k+1 = f(X_k+1)
+        9) k =k+1
+        10) WHILE(f_k+1 < f_a AND k <= K_max)
         """
-        x = list(x_o)
-        self.trayectoria = [list(x)]
-        distancia =0
-        for i in range(iteraciones):
-            # gradiente
-            gradiente = self.f.diff(x)
+        # 1) y 2) inicializacion
+        x_a = np.array(x0, dtype=float)
+        k =0
+        resultados = [x_a]
 
-            #calcular el nuevo punto
-            x_nuevo = []
-            for j in range(len(x)):
-                nuevo_valor =x[j] -self.paso * gradiente[j]
-                x_nuevo.append(nuevo_valor)
+        # 3) evaluamos f(x_a)
+        f_a = self.funcion_obj.eval(x_a)
 
-                #calcular la distancia
-                suma_cuadrados =0
-            for k in range(len(x)):
-                diferencia = x_nuevo[k] - x[k]
-                suma_cuadrados +=diferencia **2
+        # 5) bucle 
+        while k < self.k_max:
+            #6) P_x = -Gradiente
+            p_x = -self.funcion_obj.diff(x_a)
 
-            distancia = math.sqrt(suma_cuadrados)
-            self.trayectoria.append(list(x_nuevo))
-            if distancia < tolerancia:
-                print(f"Converge en {len(self.trayectoria)} pasos")
+            #7) x_a1 = x_a + alpha * P_x
+            x_nueva = x_a + self.alpha * p_x
+
+            #8) f_k+1 = f(x_nuevo)
+            f_nueva = self.funcion_obj.eval(x_nueva)
+
+            # 10) condicionales del ciclo
+            # Si la nueva fun NO es menor que la anterior
+            if not (f_nueva < f_a):
                 break
-            #actualizamos
-            x = x_nuevo
-            print(f"Paso {i}: {x}")
+
+            # actualizamos
+            x_a = x_nueva
+            f_a = f_nueva
+            k += 1
+            resultados.append(x_a)
+            print(f"Paso {k}: {x_a}")
             
-        return x
+        self.trayectoria = np.array(resultados)
+        print(f"Paso {k}: {x_a}")
 
     def plot2d(self, canvas):
         """
