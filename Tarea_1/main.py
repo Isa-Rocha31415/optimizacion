@@ -11,7 +11,7 @@ if __name__ == "__main__":
     #unimos todo:
     fig, plot = plt.subplots(figsize=(10,8))
 
-    #func = sphere
+    #func = sphere()
     #func = cigar()
     func = rosenbrock()
 
