@@ -28,6 +28,22 @@ if __name__ == "__main__":
     #parametros(rosenbrock(), 0.0001, 3000,[-20,10,-20,10], -5,5)
     #parametros(cigar(), 0.000001, 1000,[-20,10,-20,10],-10,10)
     parametros(sphere(), 0.1, 1000,[-200,200,-200,200],-100,100)
-    # hacer un grsfico en 3d para especialmente la funcion cigar
 
+    # July definir los 2 arrays que se van a usar en el main
+    #  dimensiones(R) y los valores de alpha
+
+
+    #Tadeo crear la tabla donde se muestre que se itere con diferentes vlaores
+    # de alpha y dimension(R) 
+    # alpha 1 : dimension 1
+    # alpha 2 : dimension 1
+    # alpha 3 : dimension 1
+    # .....  : ....
+    # alpha 10 : dimension 1
+    # .....  :   ...
+
+
+    # Cris 
+    #  De las tablas creadas por Tadeo se v aa crear una funcion donde le pases la tabla
+    # de ahi te de los Acurracy  y 
     pass
