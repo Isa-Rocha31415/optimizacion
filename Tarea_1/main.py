@@ -28,6 +28,5 @@ if __name__ == "__main__":
     #parametros(rosenbrock(), 0.0001, 3000,[-20,10,-20,10], -5,5)
     #parametros(cigar(), 0.000001, 1000,[-20,10,-20,10],-10,10)
     parametros(sphere(), 0.1, 1000,[-200,200,-200,200],-100,100)
-    # hacer un grsfico en 3d para especialmente la funcion cigar
 
     pass
