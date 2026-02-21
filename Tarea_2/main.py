@@ -5,6 +5,10 @@ from class_cigar import cigar
 from class_rosenbrock import rosenbrock
 from class_dg import dg
 
+# Definir lista de dimensiones R y rango de alpha
+dimensiones_R = [2, 5, 10] # Ejemplo de lista de dimensiones
+alpha_valores = np.random.uniform(0.00001, 2, size=5) # Genera 5 valores aleatorios en ese rango
+
 if __name__ == "__main__":
 
     #unimos todo:
