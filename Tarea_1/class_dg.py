@@ -56,7 +56,6 @@ class dg:
             print(f"Paso {k}: {x_a}")
             
         self.trayectoria = np.array(resultados)
-        print(f"Paso {k}: {x_a}")
 
     def plot2d(self, canvas):
         """
