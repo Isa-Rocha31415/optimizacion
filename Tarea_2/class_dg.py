@@ -19,7 +19,7 @@ class dg:
         4) a_c = c
         5) DO
         6) P_x = -(Nabla)f(x_a)
-        7) x_a1 = x_a + a_a Px  
+        7) x_a1 = x_a + a_a Px
         8) f_k+1 = f(X_k+1)
         9) k =k+1
         10) WHILE(f_k+1 < f_a AND k <= K_max)
@@ -53,11 +53,9 @@ class dg:
             f_a = f_nueva
             k += 1
             resultados.append(x_a)
-            print(f"Paso {k}: {x_a}")
             
         self.trayectoria = np.array(resultados)
-        print(f"Paso {k}: {x_a}")
-        return x_a
+        return self.trayectoria, k
 
     def plot2d(self, canvas):
         """
