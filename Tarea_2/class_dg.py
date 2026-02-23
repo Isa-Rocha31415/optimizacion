@@ -53,10 +53,9 @@ class dg:
             f_a = f_nueva
             k += 1
             resultados.append(x_a)
-            print(f"Paso {k}: {x_a}")
             
         self.trayectoria = np.array(resultados)
-        print(f"Paso {k}: {x_a}")
+        return self.trayectoria, k
 
     def plot2d(self, canvas):
         """
