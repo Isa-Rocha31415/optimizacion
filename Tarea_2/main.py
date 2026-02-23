@@ -1,17 +1,13 @@
 import pandas as pd
 import numpy as np
-# Asumo que estas clases existen en tus archivos importados
 from class_sphere import sphere
 from class_cigar import cigar
 from class_rosenbrock import rosenbrock
 from class_dg import dg
 
-# Configuración de parámetros
 dimensiones_R = [2, 5, 10, 15, 20]
 k_max = [300, 500, 1000, 1500, 2000]
 
-# Generamos los alphas una vez para usarlos consistentemente
-# Es mejor usar una semilla para que los resultados sean reproducibles
 np.random.seed(42)
 alpha_valores = np.random.uniform(0.000000000001, 0.000001, size=10)
 
