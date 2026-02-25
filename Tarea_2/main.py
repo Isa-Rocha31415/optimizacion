@@ -8,7 +8,9 @@ from class_dg import dg
 dimensiones_R = [2, 5, 10, 15, 20]
 k_max = [300, 500, 1000, 1500, 2000]
 
+
 np.random.seed(42)
+
 alpha_valores = np.random.uniform(0.000000000001, 0.000001, size=10)
 
 if __name__ == "__main__":
