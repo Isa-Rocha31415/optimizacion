@@ -3,7 +3,7 @@ import numpy as np
 import math
 
 class dg:
-    def __init__(self, funcion_obj, alpha=0.01, k_max=1000):
+    def __init__(self, funcion_obj, alpha=0.01, k_max=1000, tolerancia, cambio_alpha):
         
         self.funcion_obj = funcion_obj
         self.alpha = alpha
@@ -12,17 +12,22 @@ class dg:
         
     def solve(self, x0):
         """
+        # Editar la class dg algoritmo principal
         Funcion desenso de gradiente
         1) k =0 , k_max
         2) X_a = X_0
-        3) a_c  f(x_a)
-        4) a_c = c
-        5) DO
-        6) P_x = -(Nabla)f(x_a)
-        7) x_a1 = x_a + a_a Px
-        8) f_k+1 = f(X_k+1)
-        9) k =k+1
-        10) WHILE(f_k+1 < f_a AND k <= K_max)
+        3) alpa_c  f(x_a)
+        4) apha_c = c
+        5)  WHILE 1
+            6) P_x = -(Nabla)f(x_a)
+            7) x_a1 = x_a + a_a Px
+            8) f_k+1 = f(X_k+1)
+            9) k =k+1
+            6) WHILE(f_k+1 < f_a AND k <= K_max)
+
+        
+
+
         """
         # 1) y 2) inicializacion
         x_a = np.array(x0, dtype=float)
