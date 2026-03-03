@@ -11,6 +11,7 @@ class dg:
         self.alpha = alpha 
         self.k_max = k_max 
         self.rho = reductor
+        self.trayectoria = []
  
         self.tolerancia = tolerancia # delta δ 
         self.condicion = None # función: Wolfe, Armijo, Goldstein... 
@@ -77,7 +78,7 @@ class dg:
             # Neceistamos «donde estaba» y «a donde llegó para la condición»
 
             # 11) Encontrar el mejor tamaño para alpha 
-            while self.condicion(f_k,f_k1, g_k, P_k, alpha_k, g_k1): 
+            while self.condicion(f_k,f_k1, g_k, P_k, alpha_k): 
                 # El si la condición se cumple, quiere decir que el paso no fue bueno, que no llegó tan abajo como debería
                 # entonces rectifica. 
 
@@ -98,9 +99,11 @@ class dg:
             g_k = self.funcion_obj.diff(x_k1) 
             
             # 16) Contamos una iteración
+            self.trayectoria.append(np.copy(x_k))
             k += 1
-        
-        return x_k 
+            print(f"Paso {k}: {x_k}")
+        self.trayectoria = np.array(self.trayectoria)
+        return x_k , self.trayectoria
 
 
     def plot2d(self, canvas):
