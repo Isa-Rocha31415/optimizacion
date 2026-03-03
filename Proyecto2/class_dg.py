@@ -21,7 +21,7 @@ class dg:
         self.condicion = condition 
 
     def solve(self, x0):
-        
+        print('Entró a optimizar')
         """
         # Algorimto de Newton con Backtracking 
         1) k , k_max, α, δ, ρ
@@ -57,7 +57,7 @@ class dg:
 
         # 5) Optimizador: 
         while np.linalg.norm(g_k) > self.tolerancia and k < self.k_max: 
-            
+            print('Entró al segundo ciclo')
             # 6) primer valor de alpha
             alpha_k  = self.alpha_inicial 
 
@@ -76,9 +76,9 @@ class dg:
             f_k1 = self.funcion_obj.eval(x_k1)
             f_k = self.funcion_obj.eval(x_k)
             # Neceistamos «donde estaba» y «a donde llegó para la condición»
-
+            i = 0
             # 11) Encontrar el mejor tamaño para alpha 
-            while self.condicion(f_k,f_k1, g_k, P_k, alpha_k): 
+            while not self.condicion(f_k,f_k1, g_k, P_k, alpha_k): 
                 # El si la condición se cumple, quiere decir que el paso no fue bueno, que no llegó tan abajo como debería
                 # entonces rectifica. 
 
@@ -91,9 +91,9 @@ class dg:
                 # 14) Volvemos a medir si estamos suficientemente más abajo.  
                 f_k1 = self.funcion_obj.eval(x_k1)
                 g_k1 = self.funcion_obj.diff(x_k1)
-
                 # Repetir hasta que el paso sea bueno, que nos deje lo suficintenmente más abajo. 
-                
+                i+=1
+
             # 15) Calcular la nuva dirección para bajar a partir de estemos luego del pasito corto. 
             x_k = x_k1 # y actualizar 
             g_k = self.funcion_obj.diff(x_k1) 
@@ -102,6 +102,8 @@ class dg:
             self.trayectoria.append(np.copy(x_k))
             k += 1
             print(f"Paso {k}: {x_k}")
+            print(f'Hizo {i} vueltas del segundo while')
+
         self.trayectoria = np.array(self.trayectoria)
         return x_k , self.trayectoria
 
