@@ -77,7 +77,7 @@ class dg:
             # Neceistamos «donde estaba» y «a donde llegó para la condición»
 
             # 11) Encontrar el mejor tamaño para alpha 
-            while self.condicion(f_k,f_k1, g_k, P_k, alpha_k): 
+            while self.condicion(f_k,f_k1, g_k, P_k, alpha_k, g_k1): 
                 # El si la condición se cumple, quiere decir que el paso no fue bueno, que no llegó tan abajo como debería
                 # entonces rectifica. 
 
@@ -89,6 +89,7 @@ class dg:
 
                 # 14) Volvemos a medir si estamos suficientemente más abajo.  
                 f_k1 = self.funcion_obj.eval(x_k1)
+                g_k1 = self.funcion_obj.diff(x_k1)
 
                 # Repetir hasta que el paso sea bueno, que nos deje lo suficintenmente más abajo. 
                 
