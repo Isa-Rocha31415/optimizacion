@@ -4,6 +4,7 @@ from class_sphere import sphere
 from class_cigar import cigar
 from class_rosenbrock import rosenbrock
 from class_dg import dg
+from class_griewangk import griewangk
 
 if __name__ == "__main__":
 
@@ -27,6 +28,7 @@ if __name__ == "__main__":
 
     #parametros(rosenbrock(), 0.0001, 3000,[-20,10,-20,10], -5,5)
     #parametros(cigar(), 0.000001, 1000,[-20,10,-20,10],-10,10)
-    parametros(sphere(), 0.1, 1000,[-200,200,-200,200],-100,100)
+    parametros(griewangk(), 0.1, 1000,[-80,80,-80,80],-100,100)
+
 
     pass
