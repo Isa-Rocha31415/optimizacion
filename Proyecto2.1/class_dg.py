@@ -7,7 +7,7 @@ class dg:
         
         self.tolerancia = tolerancia
         self.alpha_inicial = 1 
-        self.funcion_obj = funcion_obj # Rosenbrock, Cigar, sphere, 
+        self.funcion_obj = funcion_obj # Rosenbrock, Cigar, sphere, griewangk
         self.alpha = alpha 
         self.k_max = k_max 
         self.rho = reductor
@@ -21,7 +21,7 @@ class dg:
         self.condicion = condition 
 
     def solve(self, x0):
-        print('Entró a optimizar')
+        #print('Entró a optimizar')
         """
         # Algorimto de Newton con Backtracking 
         1) k , k_max, α, δ, ρ
@@ -50,14 +50,14 @@ class dg:
 
         # 2)  Punto inicial
         x_k = np.array(x0, float) 
-
+        self.trayectoria.append(np.copy(x_k))
 
         # 4) Evaluar el gradiente
         g_k = self.funcion_obj.diff(x_k)
 
         # 5) Optimizador: 
         while np.linalg.norm(g_k) > self.tolerancia and k < self.k_max: 
-            print('Entró al segundo ciclo')
+            #print('Entró al segundo ciclo')
             # 6) primer valor de alpha
             alpha_k  = self.alpha_inicial 
 
@@ -78,7 +78,7 @@ class dg:
             # Neceistamos «donde estaba» y «a donde llegó para la condición»
             i = 0
             # 11) Encontrar el mejor tamaño para alpha 
-            while not self.condicion(f_k,f_k1, g_k, P_k, alpha_k): 
+            while not self.condicion(f_k,f_k1, g_k, P_k, alpha_k) and i < 50: 
                 # El si la condición se cumple, quiere decir que el paso no fue bueno, que no llegó tan abajo como debería
                 # entonces rectifica. 
 
@@ -101,11 +101,11 @@ class dg:
             # 16) Contamos una iteración
             self.trayectoria.append(np.copy(x_k))
             k += 1
-            print(f"Paso {k}: {x_k}")
-            print(f'Hizo {i} vueltas del segundo while')
+            #print(f"Paso {k}: {x_k}")
+            #print(f'Hizo {i} vueltas del segundo while')
 
         self.trayectoria = np.array(self.trayectoria)
-        return x_k , self.trayectoria
+        return self.trayectoria, k
 
 
     def plot2d(self, canvas):
