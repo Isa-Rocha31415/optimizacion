@@ -76,6 +76,15 @@ if __name__ == "__main__":
     tabla = tabla.sort_values(by=["Funcion", "Dimension","Condicion"]).reset_index(drop=True)
 
     print(tabla)
+    
+    latex_tabla = tabla.to_latex(
+    index=False, 
+    caption="Resultados de Performance y Accuracy por Función",
+    label="tab:resultados_optimizacion",
+    column_format="|l|c|c|r|r|", # Alineación: l=left, c=center, r=right
+    position="ht"
+    )
 
+    print(latex_tabla)
 
     pass
