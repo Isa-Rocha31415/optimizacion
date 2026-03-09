@@ -18,7 +18,7 @@ k_max = [300, 500, 1000, 1500, 2000]
 condiciones = [c_goldstein,curvatura] #falta agregar algunas
 alpha = 0.1
 if __name__ == "__main__":
-    funciones = [sphere, cigar]
+    funciones = [sphere, cigar,rosenbrock,griewangk]
     resultados = []
 
     for funcion_clase in funciones:
