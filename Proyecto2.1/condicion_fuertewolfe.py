@@ -12,12 +12,15 @@ def c_fuertewolfe(f_k, f_k1, g_k, g_k1, P_k, alpha_k):
     c1 = 1e-4
     c2 = 0.9
 
+    gk_pk = np.dot(g_k.flatten(), P_k.flatten())
+    gk1_pk = np.dot(g_k1.flatten(), P_k.flatten())
+
     # Armijo
-    if f_k1 > f_k + c1 * alpha_k * np.dot(g_k, P_k):
+    if f_k1 > f_k + c1 * alpha_k * gk_pk:
         return True
 
     # Curvatura fuerte (Strong Wolfe)
-    if abs(np.dot(g_k1, P_k)) > c2 * abs(np.dot(g_k, P_k)):
+    if abs(gk1_pk) > c2 * abs(gk_pk):
         return True
 
     return False
