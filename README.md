@@ -25,8 +25,8 @@ Para mantener la uniformidad y legibilidad del proyecto, todos los colaboradores
 
 El equipo está organizado bajo la siguiente estructura para optimizar el flujo de trabajo:
 
-1.  **María Isabel Rocha Vargas** — `Scrum Master`
-2.  **Julieta Valenzuela Pescador** — `Project Manager`
+1.  **María Isabel Rocha Vargas** — `Scrum Master` / `Project Manager`
+2.  **Julieta Valenzuela Pescador** — `Developer`
 3.  **Rodolfo Antonio Ponce de León Álvarez** — `Developer`
 4.  **Christopher Adrian Torres Guapo** — `Developer `
 5.  **Victor Tadeo Garcia Perez** — `Developer`
