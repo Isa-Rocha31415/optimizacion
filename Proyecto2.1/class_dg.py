@@ -21,7 +21,7 @@ class dg:
         self.condicion = condition 
 
     def solve(self, x0):
-        print('Entró a optimizar')
+        #print('Entró a optimizar')
         """
         # Algorimto de Newton con Backtracking 
         1) k , k_max, α, δ, ρ
