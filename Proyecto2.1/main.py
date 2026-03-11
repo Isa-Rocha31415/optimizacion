@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+
+# Asumimos que estas clases y funciones existen en tu entorno
 from class_sphere import sphere
 from class_cigar import cigar
 from class_rosenbrock import rosenbrock
@@ -8,31 +10,33 @@ from class_griewangk import griewangk
 from class_dg import dg
 from condicion_goldstein import c_goldstein
 from condicion_curvatura import curvatura
-from condicion_fuertewolfe import c_fuertewolfe
 from condicion_armijo import c_armijo
 from condicion_wolfe import c_wolfe
-
+from condicion_fuertewolfe import c_fuertewolfe
 
 dimensiones_R = [2, 5, 10, 15, 20]
-k_max = [300, 500, 1000, 1500, 2000]
-condiciones = [c_goldstein,curvatura] #falta agregar algunas
+# Nota: Como vamos a promediar los resultados de k_max, estos se incluyen en el 'pool' de datos
+k_max_values = [300, 500, 1000, 1500, 2000] 
+condiciones = [c_goldstein, curvatura, c_armijo, c_wolfe, c_fuertewolfe]
 alpha = 0.1
+
 if __name__ == "__main__":
-    funciones = [sphere, cigar,rosenbrock,griewangk]
-    resultados = []
+    funciones = [sphere, cigar, rosenbrock, griewangk]
+    
+    # CAMBIO IMPORTANTE: Usaremos una lista plana para guardar CADA ejecución individual
+    datos_crudos = []
+
+    print("Iniciando simulaciones... (Esto puede tardar un poco)")
 
     for funcion_clase in funciones:
         for R in dimensiones_R:
-            # Iteramos sobre k_max iteraciones
             for C in condiciones:
-                #iteramos sobre las condiciones
-                for k in k_max:
+                for k in k_max_values:
                     
-                    lista_errores = []
-                    lista_k = []
-                    
+                    # Hacemos las 3 repeticiones
                     for _ in range(30):   
                         
+                        # Definición de x0 según la función
                         if funcion_clase == sphere:
                             x0 = np.random.uniform(-600, 300, size=R)
                         elif funcion_clase == cigar:
@@ -43,48 +47,57 @@ if __name__ == "__main__":
                             x0 = np.random.uniform(-8, 8, size=R)
 
                         func = funcion_clase()
-                        optimizador = dg(func, alpha=alpha, k_max=k,tolerancia=1e-5)
+                        # Instanciamos el optimizador
+                        optimizador = dg(func, alpha=alpha, k_max=k, tolerancia=1e-5)
                         optimizador.setCondition(C)
 
+                        # Resolver
                         trayectoria, k_final = optimizador.solve(x0=x0)
                         punto_final = trayectoria[-1]
                         
-                        # Calculamos el error (distancia al origen al cuadrado).
+                        # Calculamos métricas
                         error_actual = np.linalg.norm(punto_final) ** 2
                         
-                lista_errores.append(error_actual)
-                lista_k.append(k_final)
-                performance =np.average(lista_k)
-                accuracy = np.average(lista_errores)
+                        # Guardamos el resultado crudo de esta ejecución específica
+                        # Incluimos 'k_max' para poder filtrar o verificar, aunque luego lo promediaremos
+                        datos_crudos.append({
+                            "Funcion": funcion_clase.__name__,
+                            "Dimension": R,
+                            "Condicion": C.__name__,
+                            "k_max_config": k,   # Parámetro de configuración
+                            "Iteraciones": k_final, # Performance real
+                            "Error": error_actual   # Accuracy
+                        })
 
+    print("Simulaciones terminadas. Procesando datos...")
 
+    # 1. Creamos el DataFrame con todos los datos crudos
+    df_crudo = pd.DataFrame(datos_crudos)
 
-                #guardamos el mejor resumen 
-                resultados.append([
-                    funcion_clase.__name__,
-                    R,
-                    C.__name__,
-                    performance,
-                    accuracy
-                ])
+    # 2. Agrupamos y Promediamos (Colapsar k_max)
+    # Agrupamos por Funcion, Dimension y Condicion.
+    # Esto promedia automáticamente las 3 repeticiones Y los 5 valores de k_max (total 15 muestras por fila)
+    tabla_agrupada = df_crudo.groupby(["Funcion", "Dimension", "Condicion"]).agg(
+        Performance=("Iteraciones", "mean"),
+        Accuracy=("Error", "mean")
+    ).reset_index()
 
-    tabla = pd.DataFrame(
-        resultados,
-        columns=["Funcion", "Dimension", "Condicion", "Performance", "Acurracy"]
+    # Ordenamos la tabla final
+    tabla_agrupada = tabla_agrupada.sort_values(by=["Funcion", "Dimension", "Condicion"]).reset_index(drop=True)
+
+    print("\n--- Tabula Resumen (Promediada) ---")
+    print(tabla_agrupada)
+
+    # 3. Exportar a LaTeX
+    # Usamos formateo científico para Accuracy porque suelen ser números muy pequeños
+    latex_tabla = tabla_agrupada.to_latex(
+        index=False, 
+        caption="Resultados promedio de Performance y Accuracy (Promediando $k_{max}$ y repeticiones)",
+        label="tab:resultados_optimizacion_agrupados",
+        column_format="|l|c|c|r|r|",
+        position="ht",
+        float_format="%.2e" # Notación científica para los números flotantes
     )
 
-    tabla = tabla.sort_values(by=["Funcion", "Dimension","Condicion"]).reset_index(drop=True)
-
-    print(tabla)
-    
-    latex_tabla = tabla.to_latex(
-    index=False, 
-    caption="Resultados de Performance y Accuracy por Función",
-    label="tab:resultados_optimizacion",
-    column_format="|l|c|c|r|r|", # Alineación: l=left, c=center, r=right
-    position="ht"
-    )
-
+    print("\n--- Código LaTeX ---")
     print(latex_tabla)
-
-    pass

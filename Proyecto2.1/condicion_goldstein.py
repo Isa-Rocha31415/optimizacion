@@ -1,6 +1,6 @@
 import numpy as np
 
-def c_goldstein(f_k, f_k1, g_k, P_k, alpha_k, c=0.1,g_k1=None):
+def c_goldstein(f_k, f_k1, g_k, g_k1, P_k, alpha_k, c=0.1):
     """
     Retorna True si la condición NO se cumple (para que el backtracking siga reduciendo alpha).
     Retorna False si el alpha es aceptable bajo Goldstein.
