@@ -7,7 +7,7 @@ class dg:
         
         self.tolerancia = tolerancia
         self.alpha_inicial = 1 
-        self.funcion_obj = funcion_obj # Rosenbrock, Cigar, sphere, 
+        self.funcion_obj = funcion_obj # Rosenbrock, Cigar, sphere, griewangk
         self.alpha = alpha 
         self.k_max = k_max 
         self.rho = reductor
@@ -50,7 +50,7 @@ class dg:
 
         # 2)  Punto inicial
         x_k = np.array(x0, float) 
-
+        self.trayectoria.append(np.copy(x_k))
 
         # 4) Evaluar el gradiente
         g_k = self.funcion_obj.diff(x_k)
@@ -72,13 +72,15 @@ class dg:
             x_k1 = x_k + alpha_k * P_k
 
 
+
             # 10) Evaluar la función en ese punto, o sea, medir la altura de la «montaña»
             f_k1 = self.funcion_obj.eval(x_k1)
             f_k = self.funcion_obj.eval(x_k)
+            g_k1 = self.funcion_obj.diff(x_k1)
             # Neceistamos «donde estaba» y «a donde llegó para la condición»
             i = 0
             # 11) Encontrar el mejor tamaño para alpha 
-            while not self.condicion(f_k,f_k1, g_k, P_k, alpha_k): 
+            while not self.condicion(f_k, f_k1, g_k, g_k1, P_k, alpha_k) and i < 50: 
                 # El si la condición se cumple, quiere decir que el paso no fue bueno, que no llegó tan abajo como debería
                 # entonces rectifica. 
 
@@ -105,7 +107,7 @@ class dg:
             print(f'Hizo {i} vueltas del segundo while')
 
         self.trayectoria = np.array(self.trayectoria)
-        return x_k , self.trayectoria
+        return self.trayectoria, k
 
 
     def plot2d(self, canvas):

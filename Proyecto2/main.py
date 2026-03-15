@@ -79,12 +79,12 @@ if __name__ == "__main__":
 
 
 
-    #parametros_armijo(rosenbrock(), 0.0001, 3000,[-20,10,-20,10], -5,5)  #CORREGIR
+    #parametros_armijo(sphere(), 0.0001, 3000,[-10,10,-10,10], -5,5)  #CORREGIR
     #parametros_wolfe(rosenbrock(), 0.0001, 3000,[-20,10,-20,10], -5,5)   #CORREGIR
-    #parametros_wolfefuerte(cigar(), 0.000001, 1000,[-20,10,-20,10],-10,10)   #CORREGIR
+    parametros_wolfefuerte(cigar(), 0.01, 1000,[-20,10,-20,10],-10,10)   #CORREGIR
 
     #parametros_c_goldstein(cigar(), 0.000001, 1000,[-20,10,-20,10],-10,10)  #LISTO
-    parametros_curvatura(cigar(), 0.0001, 1000,[-8,8,-8,8],-8,8)   #LISTO
+    #parametros_curvatura(cigar(), 0.0001, 1000,[-8,8,-8,8],-8,8)   #Listo
 
 
 

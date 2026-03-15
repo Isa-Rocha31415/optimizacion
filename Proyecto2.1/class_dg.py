@@ -21,7 +21,7 @@ class dg:
         self.condicion = condition 
 
     def solve(self, x0):
-        print('Entró a optimizar')
+        #print('Entró a optimizar')
         """
         # Algorimto de Newton con Backtracking 
         1) k , k_max, α, δ, ρ
@@ -72,13 +72,15 @@ class dg:
             x_k1 = x_k + alpha_k * P_k
 
 
+
             # 10) Evaluar la función en ese punto, o sea, medir la altura de la «montaña»
             f_k1 = self.funcion_obj.eval(x_k1)
             f_k = self.funcion_obj.eval(x_k)
+            g_k1 = self.funcion_obj.diff(x_k1)
             # Neceistamos «donde estaba» y «a donde llegó para la condición»
             i = 0
             # 11) Encontrar el mejor tamaño para alpha 
-            while not self.condicion(f_k,f_k1, g_k, P_k, alpha_k) and i < 50: 
+            while not self.condicion(f_k, f_k1, g_k, g_k1, P_k, alpha_k) and i < 50: 
                 # El si la condición se cumple, quiere decir que el paso no fue bueno, que no llegó tan abajo como debería
                 # entonces rectifica. 
 
