@@ -24,33 +24,43 @@ class GC:
     @args: 
         x_0:[array] = representa el punto inicial en la función objetivo 
         A : Una matriz simétrica positiva que sale de algún lugar
-    @return: algo, sí. 
+    @return: 
+        x: ndarray = el punto mínimo encontrado 
         """
         k = 0 
-        x = x_0
-        grad = A @ x # <- El operador @ creo que puede ser lento si la matriz es muy grande. Numpy tiene matmul() que parece que podría ser más rápido. 
+        x = x_0.copy() 
+
+        # g0 = Ax - b  
+        grad = self.funcion_obj.diff(x) 
+
+        # p0 = -g0
         direct:np.ndarray = -grad
-        rank_A = np.linalg.matrix_rank(A) 
+        rank  = x_0.size()
         
-        while k < rank_A and np.linalg.norm(A) > self.max_error:
+        while k < rank and np.linalg.norm(grad) > self.max_error:
             # Calculamos este factor antes para ahorrar operaciones
-            fact = A @ direct
+            # Esto es lo de Ap_x pero se está implementado de forma numérica en funcion.diof() 
+            fact = self.funcion_obj.doif(direct) 
 
             # ======= Optimizar =======
+            # de: (g_k^T * g_k) / (p_k^T * A * p_k)
+            # Sacamos solo el denominador 
+            denom = np.dot(direct, fact) # <- Podría dar un división por 0 así que hay que reisar la consola
+            
             # Calcular nuevo tamaño de paso            
-            step =  (direct @  grad) / (direct @ fact) 
+            step =  np.dot(grad, grad) / denom 
 
             # El siguiente punto para buscar será en la dirección de minimización encontrada
-            x += (step @ direct) 
+            x += (step * direct) 
 
             # La dirección la tenemos como parte de un gradiente y un factor
-            grad_next = grad + (direct @ fact)
+            grad_next = grad + (direct * fact)
 
-            # beta: sí. 
-            beta = (grad_next @ grad_next) / (grad @ grad)
+            # beta: sí
+            beta = np.dot(grad_next, grad_next) / np.dot(grad, grad)
 
-            # L dirección actualizada para el siguiente paso 
-            direct = grad_next + (beta @ direct) 
+            # La dirección actualizada para el siguiente paso 
+            direct = -grad_next + (beta * direct) 
 
             # ======= Actualizar =======
             grad = grad_next 
