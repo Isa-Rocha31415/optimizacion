@@ -53,5 +53,3 @@ Es obligatorio realizar pruebas con distintos valores de $\lambda$ para observar
 
 * **$\lambda$ Pequeño (ej. 0.05):** El suavizado es ligero; conserva los detalles finos pero puede dejar ruido residual.
 * **$\lambda$ Grande (ej. 2.0):** El ruido desaparece por completo, pero la imagen sufre un efecto de desenfoque (blur) y pierde definición en los bordes.
-
-> **Nota:** La selección del $\lambda$ óptimo depende del nivel de ruido inicial en la imagen. En el reporte final se deben incluir las imágenes resultantes para al menos tres valores distintos de lambda.
