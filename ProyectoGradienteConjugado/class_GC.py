@@ -38,6 +38,7 @@ class GC:
         rank  = x_0.size
         
         while k < rank and np.linalg.norm(grad) > self.max_error:
+            print("Encontro al ciclo")
             # Calculamos este factor antes para ahorrar operaciones
             # Esto es lo de Ap_x pero se está implementado de forma numérica en funcion.diof() 
             fact = self.funcion_obj.doif(direct) 
@@ -45,6 +46,7 @@ class GC:
             # ======= Optimizar =======
             # de: (g_k^T * g_k) / (p_k^T * A * p_k)
             # Sacamos solo el denominador 
+            print("optimizar")
             denom = np.dot(direct, fact) # <- Podría dar un división por 0 así que hay que reisar la consola
             
             # Calcular nuevo tamaño de paso            
@@ -64,10 +66,7 @@ class GC:
 
             # ======= Actualizar =======
             grad = grad_next 
+            print("Actualizamos el paso")
             k += 1
         
         return x 
-    pass 
-    
-
-    pass
