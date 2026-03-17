@@ -8,9 +8,9 @@ import numpy as np
 
 class GC:
     
-    def __init__(self, funcion_obj: funcion,max_error, k_max=1000):
+    def __init__(self, funcion_obj: funcion, k_max=1000):
         
-        self.max_error = max_error
+        self.max_error = 1e-6 
         self.funcion_obj = funcion_obj
         self.k_max = k_max 
 
@@ -18,7 +18,7 @@ class GC:
     """
     Gradiente Conjugado
     """
-    def solve(self, A:np.ndarray, x_0:np.ndarray): 
+    def solve(self, x_0:np.ndarray): 
         """
     Optimizador de gradiente conjugado.
     @args: 
@@ -28,14 +28,14 @@ class GC:
         x: ndarray = el punto mínimo encontrado 
         """
         k = 0 
-        x = x_0.copy() 
+        x = x_0.flatten().copy() 
 
         # g0 = Ax - b  
         grad = self.funcion_obj.diff(x) 
 
         # p0 = -g0
         direct:np.ndarray = -grad
-        rank  = x_0.size()
+        rank  = x_0.size
         
         while k < rank and np.linalg.norm(grad) > self.max_error:
             # Calculamos este factor antes para ahorrar operaciones
@@ -51,10 +51,10 @@ class GC:
             step =  np.dot(grad, grad) / denom 
 
             # El siguiente punto para buscar será en la dirección de minimización encontrada
-            x += (step * direct) 
+            x = x + (step * direct) 
 
             # La dirección la tenemos como parte de un gradiente y un factor
-            grad_next = grad + (direct * fact)
+            grad_next = grad + (step * fact)
 
             # beta: sí
             beta = np.dot(grad_next, grad_next) / np.dot(grad, grad)

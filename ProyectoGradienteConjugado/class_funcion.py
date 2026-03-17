@@ -85,7 +85,7 @@ class funcion(funcion):
     # devolvemos el resultado de A * vec_dirrecion
     #utilizamos numpy por eficiencia como si fuera escrito en C
     def doif(self, x_flat):
-        vec_direccion = x_flat((self.rows, self.cols))
+        vec_direccion = x_flat.reshape((self.rows, self.cols))
         # 2. La Hessiana de nuestra función aplicada a un vector d es:
         suma_vecinos_vec = (np.roll(vec_direccion, -1, 1) + np.roll(vec_direccion, 1, 1) + 
                         np.roll(vec_direccion, -1, 0) + np.roll(vec_direccion, 1, 0))
