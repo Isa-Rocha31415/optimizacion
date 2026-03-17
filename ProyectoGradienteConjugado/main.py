@@ -7,25 +7,19 @@ import matplotlib.pyplot as plt
 img_path = r"./ProyectoGradienteConjugado/img/lena.ascii.pgm" 
 
 if __name__ == "__main__" : 
-
-    
-
     # Leer la imagen con Pillow 
     img = np.array(Image.open(img_path)).astype(float)
     img_norm = img /255.0
     img_shape =img_norm.shape
     
-    # 2. Definir una escala logarítmica de lambdas para la prueba
-    # Con imagen normalizada, estos valores suelen dar resultados interesantes
     lambdas_to_test = [0.01, 0.1, 1.0, 10.0,16.0,32.0,64.0]
     fig, axes = plt.subplots(1, len(lambdas_to_test) + 1, figsize=(20, 5))
 
     # Mostrar la original primero
     axes[0].imshow(img_norm, cmap='gray')
-    axes[0].set_title("Original (Ruidosa)")
+    axes[0].set_title("Original")
     axes[0].axis('off')
 
-    # 3. Correr el experimento
     for i, lmd in enumerate(lambdas_to_test):
         print(f"Procesando Lambda = {lmd}...")
         
@@ -43,7 +37,6 @@ if __name__ == "__main__" :
         axes[i+1].set_title(f"λ = {lmd}")
         axes[i+1].axis('off')
 
-    # 4. Guardar evidencia
     plt.tight_layout()
     plt.savefig("./ProyectoGradienteConjugado/img/evidencia_lambdas.png", dpi=300)
     print("\n¡Listo! Comparativa guardada en 'img/evidencia_lambdas.png'")
