@@ -44,7 +44,7 @@ Referencia: algoritmo bfgs.jpg
 3. RETORNO:
    - x* (Punto mínimo encontrado)
 """
-"""
+
 
 from funcion import funcion
 import numpy as np
