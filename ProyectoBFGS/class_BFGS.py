@@ -1,8 +1,53 @@
-#Algoritmo
-# July
-# Rapla 
-#Puden propbar su algoritmo en el main con las funciones anteriores
-# estas funciones estan en la carpeta funciones_test
+"""
+#########################################################
+# 2. Rodolfo y July (Algorithms Team): Optimizador BFGS #
+#########################################################
+
+ALGORITMO DE OPTIMIZACIÓN QUASI-NEWTON: BFGS (Broyden-Fletcher-Goldfarb-Shannon)
+Referencia: algoritmo bfgs.jpg
+
+1. INICIALIZACIÓN:
+   - k = 0 (Contador de iteraciones)
+   - x_k = x_0 (Punto inicial)
+   - f_k = f(x_k) (Evaluación inicial de la función)
+   - H_k = H_0 (Aproximación inicial de la inversa del Hesiano, usualmente la Identidad I)
+   - g_k = grad(f(x_k)) (Gradiente inicial)
+   - Parámetros de búsqueda: epsilon (tolerancia), phi, c1, c2
+
+2. BUCLE PRINCIPAL (While STOP_CRIT() is False):
+   - Criterios de parada: 
+        * k < k_max (Máximo de iteraciones)
+        * ||g_k|| < tau (Norma del gradiente menor a la tolerancia)
+
+   a. Dirección de búsqueda:
+      p_k = -H_k * g_k
+
+   b. Búsqueda de línea (Line Search - While STEP_CRIT() is False):
+      - Iniciar step length: alpha_k = c
+      - Actualizar alpha_k: alpha_k = alpha_k * phi
+      - Nuevo punto: x_{k+1} = x_k + alpha_k * p_k
+      - Evaluar: f_{k+1} = f(x_{k+1})
+      - Criterios posibles (STEP_CRIT): Wolf-1, Wolf-2, Wolf-strong, Goldstein o Armijo [1].
+
+   c. Cálculo de vectores de actualización:
+      s_k = x_{k+1} - x_k = alpha_k * p_k (Cambio en la posición) [1, 2]
+      g_{k+1} = grad(f(x_{k+1})) (Nuevo gradiente)
+      y_k = g_{k+1} - g_k (Cambio en el gradiente) [1, 2]
+
+   d. Actualización de la inversa del Hesiano (Fórmula BFGS):
+      rho_k = 1 / (s_k^T * y_k) [1, 3]
+      H_{k+1} = (I - rho_k * s_k * y_k^T) * H_k * (I - rho_k * y_k * s_k^T) + rho_k * s_k * s_k^T [1, 4]
+
+   e. Siguiente iteración:
+      k = k + 1
+      x_k = x_{k+1}
+      g_k = g_{k+1}
+
+3. RETORNO:
+   - x* (Punto mínimo encontrado)
+"""
+
+
 from funcion import funcion
 import numpy as np
 

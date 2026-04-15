@@ -4,7 +4,7 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 
-img_path = r"./ProyectoGradienteConjugado/img/lena.ascii.pgm" 
+img_path = r"./ProyectoGradienteConjugado/img/fractal_tree.ascii.pgm" 
 
 if __name__ == "__main__" : 
     # Leer la imagen con Pillow 
@@ -12,10 +12,9 @@ if __name__ == "__main__" :
     img_norm = img /255.0
     img_shape =img_norm.shape
     
-    lambdas_to_test = [0.01, 0.1, 1.0, 10.0,16.0,32.0,64.0]
+    lambdas_to_test = [32.0]
     fig, axes = plt.subplots(1, len(lambdas_to_test) + 1, figsize=(20, 5))
 
-    # Mostrar la original primero
     axes[0].imshow(img_norm, cmap='gray')
     axes[0].set_title("Original")
     axes[0].axis('off')
