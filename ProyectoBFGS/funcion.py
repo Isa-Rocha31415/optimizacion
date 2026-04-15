@@ -7,11 +7,13 @@ class funcion:
         pass
     
     def diff():
-        #nada
+        #Gerdiente 
         pass 
 
     def doif():
-        #nada
+        # Hessiano aproximado con 
+        #       H_{k+1} = (I - rho_k * s_k * y_k^T) * H_k * (I - rho_k * y_k * s_k^T) + rho_k * s_k * s_k^T [1, 4]
+
         pass 
 
     def plot(self, lim, canvas):
