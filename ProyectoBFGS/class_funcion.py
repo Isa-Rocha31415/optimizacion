@@ -1,24 +1,32 @@
 """
-FUNCIÓN DE COSTO PARA SUAVIZADO DE IMÁGENES (Regularización de Tikhonov)
------------------------------------------------------------------------
-E(X) = Σ [ (X_i,j - I_i,j)^2 + λ * ( (X_i,j - X_i+1,j)^2 + 
-                                     (X_i,j - X_i-1,j)^2 + 
-                                     (X_i,j - X_i,j+1)^2 + 
-                                     (X_i,j - X_i,j-1)^2 ) ]
+FUNCIÓN OBJETIVO: f(theta) - Registro de Imágenes
+Referencia: func_objetivo.jpeg y Optimization Course 1.1
 
-Donde:
-- (X_i,j - I_i,j)^2 : Término de FIDELIDAD (mantiene la imagen cerca de la original).
-- λ (lambda)        : PARÁMETRO DE REGULARIZACIÓN (controla la fuerza del suavizado).
-- Términos vecinos  : PENALIZACIÓN POR DIFERENCIAS (suaviza el ruido).
+ESTA FUNCIÓN CUANTIFICA EL DESEMPEÑO DE LOS PARÁMETROS DE OPTIMIZACIÓN [1].
 
-GRADIENTE LOCAL (para optimización):
-∂E/∂X_i,j = 2(X_i,j - I_i,j) + 2*λ * [ 4*X_i,j - (X_i+1,j + X_i-1,j + X_i,j+1 + X_i,j-1) ]
+1. FORMULACIÓN MATEMÁTICA:
+   f(theta) = || I_0 - I_u(theta) ||^2_2
+   f(theta) = Sum_{x=1}^n Sum_{y=1}^m (P^0_{x,y} - P^{u*}_{x,y})^2 [2]
 
-# Clase donde va la funcion
-# Cris Gradiente
-# Tadeo Tadeo
-# Isa  Eval
+2. SIGNIFICADO TÉCNICO:
+   - Es una función de MÍNIMOS CUADRADOS que mide el error de intensidad píxel a píxel [2].
+   - P^0_{x,y}: Intensidad del píxel en la imagen original (referencia).
+   - P^{u*}_{x,y}: Intensidad del píxel en la imagen transformada tras aplicar el 
+     vector de 6 parámetros theta [2].
+   - theta: Vector de variables en DOMINIO REAL (Real-domain coding), común en la 
+     optimización paramétrica de diseños [3].
 
+3. LÓGICA DE OPERACIÓN:
+   a. Recibe un vector theta con 6 valores (rotación, sisaña, traslación).
+   b. Transforma la imagen "chueca" (I_u) usando estos parámetros.
+   c. Calcula la diferencia de intensidad entre cada píxel de la imagen resultante 
+      y la original.
+   d. Eleva las diferencias al cuadrado y las suma para obtener un escalar real [1, 2].
+
+4. OBJETIVO DEL ALGORITMO (BFGS):
+   - BFGS buscará el vector theta que minimice esta función (f(theta) -> 0) [4, 5].
+   - Al encontrar el MÍNIMO GLOBAL, las imágenes serán prácticamente idénticas, 
+     lo que significa que la rotación y sisaña han sido corregidas con éxito [6].
 """
 
 
