@@ -3,6 +3,10 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 
+###########################################################
+# 4. Cris (Transformation Logic): Modelo de 6 Parámetros  #
+###########################################################
+
 img_original = r"./ProyectoBFGS/img/I_1.pgm" 
 img_chueca = r"./ProyectoBFGS/img/I_6.pgm" 
 

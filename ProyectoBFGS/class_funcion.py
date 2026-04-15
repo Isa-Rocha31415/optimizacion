@@ -1,4 +1,8 @@
 """
+######################################################################
+#  3. Mateo (Function Logic): Implementación de la Función Objetivo  #
+######################################################################
+
 FUNCIÓN OBJETIVO: f(theta) - Registro de Imágenes
 Referencia: func_objetivo.jpeg y Optimization Course 1.1
 
