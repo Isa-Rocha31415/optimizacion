@@ -6,15 +6,15 @@ ESTA FUNCIÓN CUANTIFICA EL DESEMPEÑO DE LOS PARÁMETROS DE OPTIMIZACIÓN [1].
 
 1. FORMULACIÓN MATEMÁTICA:
    f(theta) = || I_0 - I_u(theta) ||^2_2
-   f(theta) = Sum_{x=1}^n Sum_{y=1}^m (P^0_{x,y} - P^{u*}_{x,y})^2 [2]
+   f(theta) = Sum_{x=1}^n Sum_{y=1}^m (P^0_{x,y} - P^{u*}_{x,y})^2
 
 2. SIGNIFICADO TÉCNICO:
-   - Es una función de MÍNIMOS CUADRADOS que mide el error de intensidad píxel a píxel [2].
+   - Es una función de MÍNIMOS CUADRADOS que mide el error de intensidad píxel a píxel.
    - P^0_{x,y}: Intensidad del píxel en la imagen original (referencia).
    - P^{u*}_{x,y}: Intensidad del píxel en la imagen transformada tras aplicar el 
-     vector de 6 parámetros theta [2].
+     vector de 6 parámetros theta.
    - theta: Vector de variables en DOMINIO REAL (Real-domain coding), común en la 
-     optimización paramétrica de diseños [3].
+     optimización paramétrica de diseños.
 
 3. LÓGICA DE OPERACIÓN:
    a. Recibe un vector theta con 6 valores (rotación, sisaña, traslación).
