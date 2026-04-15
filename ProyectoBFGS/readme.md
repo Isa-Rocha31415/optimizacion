@@ -115,8 +115,13 @@ El programa principal integra los componentes siguiendo este flujo lógico:
     * Para cada coordenada $(x, y)$, aplicar la transformación con $\theta^*$ para determinar de qué posición de la imagen distorsionada extraer el color (**mapeo inverso**).
     * **Guardar/Mostrar el resultado**: Exportar la imagen rectificada.
 
+> ## 3. Isabel:
+> 1. Checar el error de la imagen generada: Se van a restar las matrices de las iamgenes este resulado le ponemos valor abs o elevamos al cuadrado.
+> 2. Ver todo el funcionamiento.
+
 > [!IMPORTANT]
-> **Nota técnica**: Dado que las coordenadas calculadas $(x', y')$ suelen ser valores decimales, es fundamental implementar **interpolación bilineal** al reconstruir la imagen. Esto evita el aliasing y asegura una transición suave entre los colores de los píxeles.
+> **Nota técnica**: Dado que las coordenadas calculadas $(x', y')$ suelen ser valores decimales, es fundamental implementar **interpolación bilineal** al reconstruir la imagen. Esto evita el aliasing y asegura una transición
+> suave entre los colores de los píxeles.
 ---
 
 **Nota para el equipo:** Estamos trabajando en **Python**. Asegúrense de usar `numpy` para todas las operaciones vectoriales y matriciales, siguiendo la estructura de la clase base `funcion` proporcionada.
