@@ -64,31 +64,15 @@ Usarás una **codificación en el dominio real** para los 6 parámetros. La fór
 2.  $y' = \theta_4 x_n + \theta_5 y_n + \theta_6$
 
 Donde $\theta_3$ y $\theta_6$ controlan el desplazamiento (traslación), y el resto controla la rotación y la sisaña (shear) que deben corregir.
+
 ## 2. El Modelo de los 6 Parámetros ($\theta$)
 
 Para corregir la rotación y la sisaña (shear), utilizamos una codificación en el dominio real, común en la optimización paramétrica de diseños de ingeniería. La fórmula consiste en una **transformación afín** que mapea cada píxel original $(x_n, y_n)$ a nuevas coordenadas $(x', y')$ mediante el vector de parámetros $\theta \in \mathbb{R}^6$:
 
-$$
-\begin{bmatrix}
-x_n & y_n & 1 & 0 & 0 & 0 \\
-0 & 0 & 0 & x_n & y_n & 1
-\end{bmatrix}
-\begin{bmatrix}
-\theta_1 \\
-\theta_2 \\
-\theta_3 \\
-\theta_4 \\
-\theta_5 \\
-\theta_6
-\end{bmatrix}
-=
-\begin{bmatrix}
-x' \\
-y'
-\end{bmatrix}
-$$
 
-
+$$
+\begin{bmatrix} x_n & y_n & 1 & 0 & 0 & 0 \\ 0 & 0 & 0 & x_n & y_n & 1 \end{bmatrix} \begin{bmatrix} \theta_1 \\ \theta_2 \\ \theta_3 \\ \theta_4 \\ \theta_5 \\ \theta_6 \end{bmatrix} = \begin{bmatrix} x' \\ y' \end{bmatrix}
+$$
 
 Esta operación se traduce en dos ecuaciones lineales que definen la nueva posición del píxel:
 
