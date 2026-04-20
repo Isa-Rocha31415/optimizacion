@@ -164,8 +164,10 @@ class BFGS:
             A2 = I - rho_k * np.outer(y_k, s_k)
             
             # Fórmula BFGS Completa: Hk+1 = A1 * Hk * A2 + rho * s * s^T
+            # En teoría esta función está definida en funcion.diof
             H_k = np.dot(A1, np.dot(H_k, A2)) + rho_k * np.outer(s_k, s_k) [1, 3]
-
+            
+            #H_k = self.funcion_obj.doif(p_k)
             # e) Aqui se hace la siguiente iteración
             k += 1
             x_k = x_next
