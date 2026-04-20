@@ -1,5 +1,7 @@
 """
-#Algoritmo: July y Rapla 
+#########################################################
+# 2. Rodolfo y July (Algorithms Team): Optimizador BFGS #
+#########################################################
 
 ALGORITMO DE OPTIMIZACIÓN QUASI-NEWTON: BFGS (Broyden-Fletcher-Goldfarb-Shannon)
 Referencia: algoritmo bfgs.jpg
