@@ -120,32 +120,32 @@ from funcion import funcion #De este modulo importamos la clase funcion para pod
 import numpy as np # sirve para hacer matemáticas con matrices
 
 class BFGS:
-    def __init__(self, funcion_obj, k_max=1000):
-        # Guardamos la configuración inicial
-        self.funcion_obj = funcion_obj # La función de las imágenes
-        self.k_max = k_max             # Máximo de intentos
-        self.tau = 1e-6                # Tolerancia (qué tan cerca del cero queremos llegar)
+   def __init__(self, funcion_obj, k_max=1000):
+      # Guardamos la configuración inicial
+      self.funcion_obj = funcion_obj # La función de las imágenes
+      self.k_max = k_max             # Máximo de intentos
+      self.tau = 1e-6                # Tolerancia (qué tan cerca del cero queremos llegar)
 
-def solve(self, x_0):
-        k = 0
-        x_k = x_0.flatten().copy()  # 6 thetas iniciales
-        I = np.eye(x_k.size)        # Matriz Identidad (1s en la diagonal)
-        H_k = I.copy()              # H inicial es la Identidad [1]
-        g_k = self.funcion_obj.diff(x_k) # Gradiente inicial [1]
+   def solve(self, x_0):
+      k = 0
+      x_k = x_0.flatten().copy()  # 6 thetas iniciales
+      I = np.eye(x_k.size)        # Matriz Identidad (1s en la diagonal)
+      H_k = I.copy()              # H inicial es la Identidad [1]
+      g_k = self.funcion_obj.diff(x_k) # Gradiente inicial [1]
+   
+      while k < self.k_max and np.linalg.norm(g_k) > self.tau:
+         # a) Dirección de búsqueda (pk = -Hk * gk)
+         p_k = -np.dot(H_k, g_k) # Multiplicación de matriz H por vector g [1]
 
-while k < self.k_max and np.linalg.norm(g_k) > self.tau:
-            # a) Dirección de búsqueda (pk = -Hk * gk)
-            p_k = -np.dot(H_k, g_k) # Multiplicación de matriz H por vector g [1]
-
-            # b) Búsqueda de línea (Line Search - Simplificado)
-            alpha = 1.0 # Tamaño de paso inicial
-            phi = 0.5   # Factor de reducción
-            c1 = 1e-4   # Parámetro de Wolfe
+         # b) Búsqueda de línea (Line Search - Simplificado)
+         alpha = 1.0 # Tamaño de paso inicial
+         phi = 0.5   # Factor de reducción
+         c1 = 1e-4   # Parámetro de Wolfe
             
-            # Mientras no baje suficiente el error, hacemos mas chiquito el alpha
-            while self.funcion_obj.eval(x_k + alpha * p_k) > \
-                  self.funcion_obj.eval(x_k) + c1 * alpha * np.dot(g_k, p_k):
-                alpha *= phi # Achicamos el paso
+         # Mientras no baje suficiente el error, hacemos mas chiquito el alpha
+         while self.funcion_obj.eval(x_k + alpha * p_k) > \
+            self.funcion_obj.eval(x_k) + c1 * alpha * np.dot(g_k, p_k):
+            alpha *= phi # Achicamos el paso
             
             # c. Cálculo de vectores de actualización
             s_k = alpha * p_k # Cambio en la posición [1, 2]
@@ -169,4 +169,5 @@ while k < self.k_max and np.linalg.norm(g_k) > self.tau:
             x_k = x_next
             g_k = g_next
             
-        return x_k # Retornamos los thetas ideales
+
+            return x_k # Retornamos los thetas ideales
