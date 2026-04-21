@@ -10,6 +10,26 @@ from class_funcion import funcion_imagen
 img_o = r"I_1.pgm" 
 img_c = r"I_6.pgm" 
 
+
+
+
+def transformacion_prueba(coords, theta):
+        # Desempaquetamos las coordenadas originales
+    xn, yn = coords
+        
+        # Desempaquetamos los parámetros theta para mayor claridad
+        # theta[0]=t1, theta[1]=t2, theta[2]=t3 (traslación x)
+        # theta[3]=t4, theta[4]=t5, theta[5]=t6 (traslación y)
+    t1, t2, t3, t4, t5, t6 = theta
+        
+        # Aplicamos la multiplicación de matrices simplificada
+    x_prim = t1 * xn + t2 * yn + t3
+    y_prim = t4 * xn + t5 * yn + t6
+        
+        return (x_prim, y_prim)
+
+
+
 if __name__ == "__main__" : 
     # Leer la imagen con Pillow 
     img_original = np.array(Image.open(img_o)).astype(float) /255.0
@@ -32,8 +52,13 @@ if __name__ == "__main__" :
     # --- 4. Generar la imagen final (Mapeo Inverso) ---
     # Usamos los métodos de tu clase para reconstruir la imagen con el theta hallado
     xp, yp = func._transformar(theta_optimo)
-    img_rectificada, _ = func._interpolar_bilineal(img_chueca, xp, yp)
+    #img_rectificada, _ = func._interpolar_bilineal(img_chueca, xp, yp)
     
+    empty_img = np.zeros((213, 320))
+    # experimento 1
+    for y in imagen_chuca:
+        for x in y: 
+            
     # --- 5. Cálculo de Error ---
     # Diferencia absoluta punto a punto
     error_map = np.abs(img_original - img_rectificada)

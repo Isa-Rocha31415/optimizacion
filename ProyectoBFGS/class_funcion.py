@@ -41,6 +41,39 @@ class funcion_imagen(funcion):
         # Retornamos también la máscara para usarla en eval/diff
         return I_interp, valid
 
+    def transformacion_prueba(coords, theta):
+            """
+        Aplica una transformación afín de 6 parámetros a un punto (x, y).
+        
+        Args:
+            coords (tuple): Un par (x, y) con las coordenadas originales.
+            theta (list/array): Un arreglo o lista con los 6 parámetros [t1, t2, t3, t4, t5, t6].
+            
+        Returns:
+            tuple: Las nuevas coordenadas (x_prim, y_prim).
+        """
+        # Desempaquetamos las coordenadas originales
+        xn, yn = coords
+        
+        # Desempaquetamos los parámetros theta para mayor claridad
+        # theta[0]=t1, theta[1]=t2, theta[2]=t3 (traslación x)
+        # theta[3]=t4, theta[4]=t5, theta[5]=t6 (traslación y)
+        t1, t2, t3, t4, t5, t6 = theta
+        
+        # Aplicamos la multiplicación de matrices simplificada
+        x_prim = t1 * xn + t2 * yn + t3
+        y_prim = t4 * xn + t5 * yn + t6
+        
+        return (x_prim, y_prim)
+
+# --- Ejemplo de uso ---
+puntos_originales = (10, 20)
+parametros = [1.2, 0.2, 5.0, 0.1, 1.1, -3.0]
+
+resultado = transformacion_afin(puntos_originales, parametros)
+print(f"Coordenadas transformadas: {resultado}")        
+
+    
     def eval(self, theta):
         theta = np.asarray(theta, dtype=float)
         xp, yp = self._transformar(theta)

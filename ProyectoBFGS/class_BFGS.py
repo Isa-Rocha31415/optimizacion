@@ -14,7 +14,10 @@ Referencia: algoritmo bfgs.jpg
    - g_k = grad(f(x_k)) (Gradiente inicial)
    - Parámetros de búsqueda: epsilon (tolerancia), phi, c1, c2
 
-2. BUCLE PRINCIPAL (While STOP_CRIT() is False):
+2. BUCLE PRINCIPAL (Whihizo su chamba
+diff hizo su chamba
+diff hizo su chamba
+diff hizo su chle STOP_CRIT() is False):
    - Criterios de parada: 
         * k < k_max (Máximo de iteraciones)
         * ||g_k|| < tau (Norma del gradiente menor a la tolerancia)
