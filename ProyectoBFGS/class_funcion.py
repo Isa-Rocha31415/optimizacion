@@ -15,6 +15,7 @@ class funcion_imagen(funcion):
         self.y_coords = y_coords.astype(float)
 
     def _transformar(self, theta):
+        theta = np.asarray(theta, dtype=float).reshape(6,)
         xp = theta[0] * self.x_coords + theta[1] * self.y_coords + theta[2]
         yp = theta[3] * self.x_coords + theta[4] * self.y_coords + theta[5]
         return xp, yp
@@ -42,18 +43,49 @@ class funcion_imagen(funcion):
         return result
 
     def eval(self, theta):
+        theta = np.asarray(theta, dtype=float).reshape(6,)
         xp, yp = self._transformar(theta)
         Iu_t = self._interpolar_bilineal(self.Iu, xp, yp)
         diff = self.I0 - Iu_t
         return np.sum(diff ** 2)
 
     def diff(self, theta):
-        #Gradiente por diferencias finitas centrales.
-        #Con solo 6 parámetros
+        # Gradiente por diferencias finitas centrales.
+        # Con solo 6 parámetros
+        theta = np.asarray(theta, dtype=float).reshape(6,)
         grad = np.zeros(6)
         h = 1e-5
         for i in range(6):
-            tp = theta.copy(); tp[i] += h
-            tm = theta.copy(); tm[i] -= h
+            tp = theta.copy()
+            tm = theta.copy()
+            tp[i] += h
+            tm[i] -= h
             grad[i] = (self.eval(tp) - self.eval(tm)) / (2.0 * h)
         return grad
+
+    def doif(self, theta, tol=1e-6, max_iter=100):
+        theta = np.asarray(theta, dtype=float).reshape(6,)
+        n = 6
+        H = np.eye(n)
+        g = self.diff(theta)
+
+        k = 0
+        while np.linalg.norm(g) > tol and k < max_iter:
+            p = -H @ g
+            theta_nuevo = theta + p
+            g_nuevo = self.diff(theta_nuevo)
+
+            s = theta_nuevo - theta
+            y = g_nuevo - g
+            ys = np.dot(y, s)
+
+            if ys != 0:
+                rho = 1.0 / ys
+                I = np.eye(n)
+                H = (I - rho * np.outer(s, y)) @ H @ (I - rho * np.outer(y, s)) + rho * np.outer(s, s)
+
+            theta = theta_nuevo
+            g = g_nuevo
+            k += 1
+
+        return theta
