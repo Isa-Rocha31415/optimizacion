@@ -41,16 +41,26 @@ class funcion_imagen(funcion):
         # Retornamos también la máscara para usarla en eval/diff
         return I_interp, valid
 
+    #def eval(self, theta):
+    #    theta = np.asarray(theta, dtype=float)
+    #    xp, yp = self._transformar(theta)
+    #    Iu_t, valid = self._interpolar_bilineal(self.Iu, xp, yp)
+        
+    #    # Solo evaluamos píxeles que están dentro de la imagen
+    #    diff = (self.I0 - Iu_t)[valid]
+    #    # Normalización por número de píxeles válidos (escala ~1)
+    #    return np.sum(diff ** 2) / np.maximum(1.0, np.sum(valid))
     def eval(self, theta):
         theta = np.asarray(theta, dtype=float)
         xp, yp = self._transformar(theta)
         Iu_t, valid = self._interpolar_bilineal(self.Iu, xp, yp)
         
-        # Solo evaluamos píxeles que están dentro de la imagen
-        diff = (self.I0 - Iu_t)[valid]
-        # Normalización por número de píxeles válidos (escala ~1)
-        return np.sum(diff ** 2) / np.maximum(1.0, np.sum(valid))
-
+        # Calculamos la diferencia solo donde los píxeles son válidos
+        # Para los que están fuera, asumimos un error (opcional, pero ayuda a la convergencia)
+        diff = (self.I0[valid] - Iu_t[valid])
+        
+        # Sumatoria de errores al cuadrado pura
+        return np.sum(diff ** 2)
     def diff(self, theta):
         theta = np.asarray(theta, dtype=float)
         grad = np.zeros(6)

@@ -18,8 +18,9 @@ if __name__ == "__main__" :
     func = funcion_imagen(img_original,img_chueca) 
     model = BFGS(func)  
 
-    #Tratando el arreglo de thetas inicial (0, 0, 0, 0, 0, 0) por pobar. 
-    theta_inicial = np.array([1.0, 0.0, 0.0, 0.0, 1.0, 0.0])
+    #Tratando el arreglo de thetas inicial (0, 0, 0, 0, https://github.com/Isa-Rocha31415/optimizacion.git0, 0) por pobar. 
+    #theta_inicial = np.array([1.0, 0.0, 0.0, 0.0, 1.0, 0.0])
+    theta_inicial = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
     
     print("Iniciando optimización BFGS...")
     
@@ -32,8 +33,7 @@ if __name__ == "__main__" :
     # --- 4. Generar la imagen final (Mapeo Inverso) ---
     # Usamos los métodos de tu clase para reconstruir la imagen con el theta hallado
     xp, yp = func._transformar(theta_optimo)
-    img_rectificada = func._interpolar_bilineal(img_chueca, xp, yp)
-    
+    img_rectificada, _ = func._interpolar_bilineal(img_chueca, xp, yp)
     # --- Visualización de Resultados ---
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
     
@@ -43,8 +43,10 @@ if __name__ == "__main__" :
     axes[1].imshow(img_chueca, cmap='gray')
     axes[1].set_title("Distorsionada")
     
-    axes[2].imshow(img_rectificada)
+    axes[2].imshow(img_rectificada, cmap='gray')
     axes[2].set_title("Reconstruida ")
+    print(f"Shape Rectificada: {img_rectificada.shape}")
+
     
     for ax in axes:
         ax.axis('off')
