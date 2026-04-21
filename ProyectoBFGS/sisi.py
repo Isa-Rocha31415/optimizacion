@@ -20,6 +20,7 @@ def to_float01(img):
         arr = (arr - arr.min()) / (arr.max() - arr.min())
     else:
         arr = np.zeros_like(arr, dtype=float)
+    return arr.astype(float)
 
 def transformar_matriz(matriz, t1, t2, t3, t4, t5, t6):
     alto, ancho = matriz.shape
