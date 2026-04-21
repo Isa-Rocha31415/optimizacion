@@ -1,106 +1,65 @@
-"""
-######################################################################
-#  3. Mateo (Function Logic): Implementación de la Función Objetivo  #
-######################################################################
-
-FUNCIÓN OBJETIVO: f(theta) - Registro de Imágenes
-Referencia: func_objetivo.jpeg y Optimization Course 1.1
-
-ESTA FUNCIÓN CUANTIFICA EL DESEMPEÑO DE LOS PARÁMETROS DE OPTIMIZACIÓN [1].
-
-1. FORMULACIÓN MATEMÁTICA:
-   f(theta) = || I_0 - I_u(theta) ||^2_2
-   f(theta) = Sum_{x=1}^n Sum_{y=1}^m (P^0_{x,y} - P^{u*}_{x,y})^2
-
-2. SIGNIFICADO TÉCNICO:
-   - Es una función de MÍNIMOS CUADRADOS que mide el error de intensidad píxel a píxel.
-   - P^0_{x,y}: Intensidad del píxel en la imagen original (referencia).
-   - P^{u*}_{x,y}: Intensidad del píxel en la imagen transformada tras aplicar el 
-     vector de 6 parámetros theta.
-   - theta: Vector de variables en DOMINIO REAL (Real-domain coding), común en la 
-     optimización paramétrica de diseños.
-
-3. LÓGICA DE OPERACIÓN:
-   a. Recibe un vector theta con 6 valores (rotación, sisaña, traslación).
-   b. Transforma la imagen "chueca" (I_u) usando estos parámetros.
-   c. Calcula la diferencia de intensidad entre cada píxel de la imagen resultante 
-      y la original.
-   d. Eleva las diferencias al cuadrado y las suma para obtener un escalar real [1, 2].
-
-4. OBJETIVO DEL ALGORITMO (BFGS):
-   - BFGS buscará el vector theta que minimice esta función (f(theta) -> 0) [4, 5].
-   - Al encontrar el MÍNIMO GLOBAL, las imágenes serán prácticamente idénticas, 
-     lo que significa que la rotación y sisaña han sido corregidas con éxito [6].
-"""
-
-
-from funcion import funcion
 import numpy as np
+from funcion import funcion
 
-# Vamos a utilizar condiciones de barrera- Toroide
-
-class funcion(funcion):
-    
-    def __init__(self, img, lamda =0.1):
-        #imagen
-        self.img_original = img.astype(float)
-        self.lamda =lamda
-        self.rows, self.cols = img.shape
-
-
-
-    def eval(self, x_flat):
-        """
-        Método que evalúa la función de suavisado 
-        utilizamos la condicion de barrera (toroide)
-        recorre toda la imagen  y lo hace en forma de toroide
-        x_flat: la imagen actual (X) convertida en un vector unidimensional.
+class funcion_imagen(funcion):
+    def __init__(self, img_original, img_distorsionada):
+        self.I0 = img_original.astype(float)
+        self.Iu = img_distorsionada.astype(float)
+        self.rows, self.cols = self.I0.shape
         
-        """
-        # recontruir la matriz img desde el vector plano
-        X = x_flat.reshape((self.rows, self.cols))
-        I = self.img_original
+        # Coordenadas (x, y) -> (columna, fila)
+        y_coords, x_coords = np.mgrid[0:self.rows, 0:self.cols]
+        self.x_coords = x_coords.astype(float)
+        self.y_coords = y_coords.astype(float)
 
-        # termino de fidelidad
-        fidelidad = np.sum((X-I)**2)
+    def _transformar(self, theta):
+        xp = theta[0] * self.x_coords + theta[1] * self.y_coords + theta[2]
+        yp = theta[3] * self.x_coords + theta[4] * self.y_coords + theta[5]
+        return xp, yp
 
-        # Termino de suavizado con condicion de Toroide
-        # calculamos la diferencia con los vecinos desplzando la matrix completa
+    def _interpolar_bilineal(self, img, xp, yp):
+        rows, cols = img.shape
+        x0 = np.floor(xp).astype(int)
+        y0 = np.floor(yp).astype(int)
+        x1, y1 = x0 + 1, y0 + 1
 
-        dif_derecha = (X- np.roll(X, shift=-1, axis =1))**2 #X_ij - X_i,j+1
-        dif_izq = (X -np.roll(X, shift =1, axis=1))**2  # X_ij - X_i,j-1
-        dif_abajo = (X- np.roll(X, shift=-1, axis =0))**2 # X_ij - X_i+1,j
-        dif_arriba = (X -np.roll(X, shift=1, axis =0))**2  # X_ij - X_i-1,
+        # Máscara de validez (EVITA que el optimizador "caiga" en bordes planos)
+        valid = (x0 >= 0) & (x1 < cols) & (y0 >= 0) & (y1 < rows)
         
-        suavizado = np.sum(dif_derecha + dif_izq +dif_abajo + dif_arriba)
-        return  fidelidad + (self.lamda * suavizado)
-    
-        # @Cris: He actualizado diff para usar el Gradiente Analítico.
-    # El método anterior (diferencias finitas con h) era O(n), lo que 
-    # hacía que procesar una imagen pequeña tardara minutos. 
-    # Con np.roll calculamos el gradiente de toda la imagen en un solo paso 
-    # matemático, aprovechando que ya conocemos la derivada de la función.
-    def diff(self, x_flat):
-        X = x_flat.reshape((self.rows, self.cols))
-        I = self.img_original
-        
-        # Derivada analítica: 2(X - I) + 2*λ*(4X - suma_vecinos)
-        # Usamos np.roll para cumplir la condición de Toroide de forma vectorial
-        suma_vecinos = (np.roll(X, -1, 1) + np.roll(X, 1, 1) + 
-                        np.roll(X, -1, 0) + np.roll(X, 1, 0))
-        
-        grad = 2 * (X - I) + 2 * self.lamda * (4 * X - suma_vecinos)
-        return grad.flatten()
-        
+        # Safe indexing
+        x0c, y0c = np.clip(x0, 0, cols-1), np.clip(y0, 0, rows-1)
+        x1c, y1c = np.clip(x1, 0, cols-1), np.clip(y1, 0, rows-1)
 
-    # @Tadeo: He modificado la Hessiana. Calcular la matriz completa con h es ineficiente
-    # devolvemos el resultado de A * vec_dirrecion
-    #utilizamos numpy por eficiencia como si fuera escrito en C
-    def doif(self, x_flat):
-        vec_direccion = x_flat.reshape((self.rows, self.cols))
-        # 2. La Hessiana de nuestra función aplicada a un vector d es:
-        suma_vecinos_vec = (np.roll(vec_direccion, -1, 1) + np.roll(vec_direccion, 1, 1) + 
-                        np.roll(vec_direccion, -1, 0) + np.roll(vec_direccion, 1, 0))
+        wx = xp - np.floor(xp)
+        wy = yp - np.floor(yp)
 
-        resultado =2 * vec_direccion +2 *self.lamda *(4 * vec_direccion - suma_vecinos_vec)  
-        return resultado.flatten()     
+        I_interp = ((1 - wx) * (1 - wy) * img[y0c, x0c] +
+                    wx * (1 - wy) * img[y0c, x1c] +
+                    (1 - wx) * wy * img[y1c, x0c] +
+                    wx * wy * img[y1c, x1c])
+        
+        # Retornamos también la máscara para usarla en eval/diff
+        return I_interp, valid
+
+    def eval(self, theta):
+        theta = np.asarray(theta, dtype=float)
+        xp, yp = self._transformar(theta)
+        Iu_t, valid = self._interpolar_bilineal(self.Iu, xp, yp)
+        
+        # Solo evaluamos píxeles que están dentro de la imagen
+        diff = (self.I0 - Iu_t)[valid]
+        # Normalización por número de píxeles válidos (escala ~1)
+        return np.sum(diff ** 2) / np.maximum(1.0, np.sum(valid))
+
+    def diff(self, theta):
+        theta = np.asarray(theta, dtype=float)
+        grad = np.zeros(6)
+        # Paso relativo: mejor para parámetros de traslación (pixeles) vs rotación (adimensionales)
+        h = np.clip(np.abs(theta) * 1e-3, 1e-4, 1e-3)
+        
+        for i in range(6):
+            tp, tm = theta.copy(), theta.copy()
+            tp[i] += h[i]
+            tm[i] -= h[i]
+            grad[i] = (self.eval(tp) - self.eval(tm)) / (2.0 * h[i])
+        return grad
