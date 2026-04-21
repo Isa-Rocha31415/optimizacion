@@ -1,4 +1,10 @@
 
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import ndimage
+import imageio.v2 as imageio
+from class_funcion import *
+from class_BFGS import *
 class FuncionImagen:
     def __init__(self, img_t, img_obj, h=5e-4):
         self.img_t = img_t
