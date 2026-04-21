@@ -1,77 +1,54 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Apr 21 15:43:06 2026
+
+@author: isabel
+"""
+
 import numpy as np
-from funcion import funcion
+import matplotlib.pyplot as plt
+from scipy import ndimage
+import imageio.v2 as imageio
 
-class funcion_imagen(funcion):
-    def __init__(self, img_original, img_distorsionada):
-        self.I0 = img_original.astype(float)
-        self.Iu = img_distorsionada.astype(float)
-        self.rows, self.cols = self.I0.shape
-        
-        # Coordenadas (x, y) -> (columna, fila)
-        y_coords, x_coords = np.mgrid[0:self.rows, 0:self.cols]
-        self.x_coords = x_coords.astype(float)
-        self.y_coords = y_coords.astype(float)
+def to_float01(img):
+    arr = np.asarray(img, dtype=float)
+    if arr.ndim == 3 and arr.shape[2] >= 3:
+        r, g, b = arr[...,0], arr[...,1], arr[...,2]
+        arr = 0.299*r + 0.587*g + 0.114*b
+    if arr.max() > arr.min():
+        arr = (arr - arr.min()) / (arr.max() - arr.min())
+    else:
+        arr = np.zeros_like(arr, dtype=float)
 
-    def _transformar(self, theta):
-        xp = theta[0] * self.x_coords + theta[1] * self.y_coords + theta[2]
-        yp = theta[3] * self.x_coords + theta[4] * self.y_coords + theta[5]
-        return xp, yp
+def transformar_matriz(matriz, t1, t2, t3, t4, t5, t6):
+    alto, ancho = matriz.shape
+    cx, cy = ancho / 2.0, alto / 2.0
 
-    def _interpolar_bilineal(self, img, xp, yp):
-        rows, cols = img.shape
-        x0 = np.floor(xp).astype(int)
-        y0 = np.floor(yp).astype(int)
-        x1, y1 = x0 + 1, y0 + 1
+    det = t1 * t4 - t2 * t3
+    if abs(det) < 1e-10:
+        return np.zeros_like(matriz)
 
-        # Máscara de validez (EVITA que el optimizador "caiga" en bordes planos)
-        valid = (x0 >= 0) & (x1 < cols) & (y0 >= 0) & (y1 < rows)
-        
-        # Safe indexing
-        x0c, y0c = np.clip(x0, 0, cols-1), np.clip(y0, 0, rows-1)
-        x1c, y1c = np.clip(x1, 0, cols-1), np.clip(y1, 0, rows-1)
+    inv_t1 = t4 / det
+    inv_t2 = -t2 / det
+    inv_t3 = -t3 / det
+    inv_t4 = t1 / det
 
-        wx = xp - np.floor(xp)
-        wy = yp - np.floor(yp)
+    inv_t5 = -(inv_t1 * t5 + inv_t2 * t6)
+    inv_t6 = -(inv_t3 * t5 + inv_t4 * t6)
 
-        I_interp = ((1 - wx) * (1 - wy) * img[y0c, x0c] +
-                    wx * (1 - wy) * img[y0c, x1c] +
-                    (1 - wx) * wy * img[y1c, x0c] +
-                    wx * wy * img[y1c, x1c])
-        
-        # Retornamos también la máscara para usarla en eval/diff
-        return I_interp, valid
+    y, x = np.mgrid[0:alto, 0:ancho]
+    x_c = x - cx
+    y_c = y - cy
 
+    xs = inv_t1 * x_c + inv_t2 * y_c + cx + inv_t5
+    ys = inv_t3 * x_c + inv_t4 * y_c + cy + inv_t6
 
-# --- Ejemplo de uso ---
-puntos_originales = (10, 20)
-parametros = [1.2, 0.2, 5.0, 0.1, 1.1, -3.0]
+    return ndimage.map_coordinates(matriz, [ys, xs], order=3, mode='constant', cval=0)
 
-resultado = transformacion_afin(puntos_originales, parametros)
-print(f"Coordenadas transformadas: {resultado}")        
+def error_cuadratico(a, b):
+    return np.sum((a - b) ** 2) / (2 * a.size)
 
-    
-    def eval(self, theta):
-        theta = np.asarray(theta, dtype=float)
-        xp, yp = self._transformar(theta)
-        Iu_t, valid = self._interpolar_bilineal(self.Iu, xp, yp)
-        
-        # Solo evaluamos píxeles que están dentro de la imagen
-        diff = (self.I0 - Iu_t)[valid]
-        # Normalización por número de píxeles válidos (escala ~1)
-        return np.sum(diff ** 2) / np.maximum(1.0, np.sum(valid))
-        
-        # Sumatoria de errores al cuadrado pura
-        return np.sum(diff ** 2)
-    def diff(self, theta):
-        theta = np.asarray(theta, dtype=float)
-        grad = np.zeros(6)
-        # Paso relativo: mejor para parámetros de traslación (pixeles) vs rotación (adimensionales)
-        h = np.clip(np.abs(theta) * 1e-3, 1e-4, 1e-3)
-        
-        for i in range(6):
-            tp, tm = theta.copy(), theta.copy()
-            tp[i] += h[i]
-            tm[i] -= h[i]
-            grad[i] = (self.eval(tp) - self.eval(tm)) / (2.0 * h[i])
-        print("diff hizo su chamba")
-        return grad
+def funcion_objetivo(params, img_t, img_obj):
+    rec = transformar_matriz(img_t, *params)
+    return error_cuadratico(rec, img_obj)
